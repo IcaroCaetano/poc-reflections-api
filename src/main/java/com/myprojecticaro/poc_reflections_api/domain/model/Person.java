@@ -2,6 +2,7 @@ package com.myprojecticaro.poc_reflections_api.domain.model;
 
 import java.util.Objects;
 
+//Dummy classes/interfaces for demonstration purposes
 public class Person {
 	
     private String name;
@@ -48,5 +49,4 @@ public class Person {
 		Person other = (Person) obj;
 		return age == other.age && Objects.equals(name, other.name);
 	}
-    
 }
