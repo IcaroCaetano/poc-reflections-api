@@ -12,6 +12,11 @@ public class GenericHolder {
      * A list of strings used for generic type inspection.
      */
     private List<String> list;
+    
+    /**
+     * A list of person used for generic type inspection.
+     */
+    private List<Person> persons;
 
     public List<String> getList() {
         return list;
@@ -20,4 +25,14 @@ public class GenericHolder {
     public void setList(List<String> list) {
         this.list = list;
     }
+
+	public List<Person> getPersons() {
+		return persons;
+	}
+
+	public void setPersons(List<Person> persons) {
+		this.persons = persons;
+	}
+    
+    
 }

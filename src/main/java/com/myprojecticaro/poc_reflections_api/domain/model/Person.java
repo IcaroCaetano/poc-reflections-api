@@ -2,7 +2,9 @@ package com.myprojecticaro.poc_reflections_api.domain.model;
 
 import java.util.Objects;
 
-//Dummy classes/interfaces for demonstration purposes
+import com.myprojecticaro.poc_reflections_api.infrastructure.annotation.Info;
+
+@Info(author = "Bruno", date = "2025-04-10")
 public class Person {
 	
     private String name;
