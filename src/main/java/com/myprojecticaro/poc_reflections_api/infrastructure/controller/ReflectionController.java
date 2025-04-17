@@ -4,13 +4,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myprojecticaro.poc_reflections_api.domain.model.Greeting;
 import com.myprojecticaro.poc_reflections_api.domain.model.Person;
+import com.myprojecticaro.poc_reflections_api.domain.model.GenericHolder;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Proxy;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 /**
@@ -121,5 +127,59 @@ public class ReflectionController {
         
         return "Class modifiers: " + Modifier.toString(classModifiers) +
                "\nMethod modifiers: " + Modifier.toString(methodModifiers);
+    }
+    
+    /**
+     * Lists all annotations present on the {@code Person} class.
+     *
+     * @return A string with the simple names of each annotation on the Person class.
+     */
+    @GetMapping("/annotations")
+    public String listAnnotations() {
+        StringBuilder sb = new StringBuilder();
+        Annotation[] annotations = Person.class.getAnnotations();
+
+        for (Annotation annotation : annotations) {
+            sb.append(annotation.annotationType().getSimpleName()).append("\n");
+        }
+
+        return sb.toString();
+    }
+    
+
+    /**
+     * Demonstrates creating a dynamic proxy using the {@code Proxy} class and
+     * an {@code InvocationHandler}.
+     *
+     * @return A greeting message returned by the proxy.
+     */
+    @GetMapping("/dynamicProxy")
+    public String createProxy() {
+        Greeting proxy = (Greeting) Proxy.newProxyInstance(
+                Greeting.class.getClassLoader(),
+                new Class[]{Greeting.class},
+                (proxyObj, method, args) -> "Hello from proxy! Method: " + method.getName()
+        );
+
+        return proxy.sayHello();
+    }
+    
+    /**
+     * Demonstrates how to retrieve the generic type information of a field using {@code ParameterizedType}.
+     *
+     * @return The name of the generic type argument, if any.
+     * @throws Exception If the field is not found or inaccessible.
+     */
+    @GetMapping("/genericType")
+    public String genericType() throws Exception {
+        Field field = GenericHolder.class.getDeclaredField("list");
+        Type type = field.getGenericType();
+
+        if (type instanceof ParameterizedType pt) {
+            Type actualType = pt.getActualTypeArguments()[0];
+            return "Generic type of 'list': " + actualType.getTypeName();
+        }
+
+        return "Not a parameterized type";
     }
 }
